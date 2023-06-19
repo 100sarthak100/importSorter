@@ -81,7 +81,7 @@ function activate(context) {
 				const [, components, libraryName] = match;
 				const componentList = components.split(/\s*,\s*/);
 
-				if (componentList?.length >= 2) {
+				if (componentList?.length >= 5) {
 					const importLines = [
 						`import {`,
 						...componentList?.map(component => `    ${component},`),
@@ -110,7 +110,7 @@ function activate(context) {
 				const [, components, libraryName] = match;
 				const componentList = components.split(/\s*,\s*/);
 
-				if (componentList?.length >= 2) {
+				if (componentList?.length >= 5) {
 					const importLines = [
 						`import {`,
 						...componentList?.map(component => `    ${component},`),
