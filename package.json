@@ -3,7 +3,7 @@
   "displayName": "Sorted",
   "description": "Sort Imports",
   "publisher": "SarthakNaithani",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.79.0"
   },
@@ -13,10 +13,12 @@
   "activationEvents": [],
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "importsorter.importsorter",
-      "title": "Sort Imports"
-    }]
+    "commands": [
+      {
+        "command": "importsorter.importsorter",
+        "title": "Sort Imports"
+      }
+    ]
   },
   "repository": {
     "type": "git",
