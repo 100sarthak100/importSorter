@@ -1,7 +1,8 @@
 {
-  "name": "importsorter",
-  "displayName": "importSorter",
+  "name": "Sorted",
+  "displayName": "Sorted",
   "description": "Sort Imports",
+  "publisher": "SarthakNaithani",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.79.0"
@@ -16,6 +17,10 @@
       "command": "importsorter.importsorter",
       "title": "Sort Imports"
     }]
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/100sarthak100/importSorter.git"
   },
   "scripts": {
     "lint": "eslint .",
