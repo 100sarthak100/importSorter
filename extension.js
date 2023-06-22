@@ -2,7 +2,21 @@ const vscode = require('vscode');
 
 function activate(context) {
 
-	const numOfMultiImports = 2;
+	const numOfMultiImports = 1;
+
+	const importsSortFunc = (a, b) => {
+		if (a?.length > b?.length) {
+			return 1;
+		}
+
+		if (a?.length === b?.length) {
+			return 0;
+		}
+
+		if (a?.length < b?.length) {
+			return -1;
+		}
+	}
 
 	const importsParser = (params) => {
 		let { multiImportsArray = [], singleImportsArray = [] } = params
@@ -31,7 +45,13 @@ function activate(context) {
 
 			if (match) {
 				const [, defaultImports, components, libraryName] = match;
-				const componentList = components.split(/\s*,\s*/);
+				let componentList = components.split(/\s*,\s*/);
+
+				if(!componentList?.[componentList?.length - 1]?.trim()?.length) {
+					componentList?.pop();
+				}
+
+				componentList?.sort(importsSortFunc);
 
 				if (componentList?.length >= numOfMultiImports) {
 					let defaultImportsStr = '';
@@ -68,28 +88,30 @@ function activate(context) {
 		return multiImportsString;
 	}
 
-	const importsSortFunc = (a, b) => {
-		if (a?.length > b?.length) {
-			return 1;
-		}
+	const checkIfImportStatement = (lineText) => {
+		const importRegexp = /import/gm;
+		return lineText?.match(importRegexp);
+	}
 
-		if (a?.length === b?.length) {
-			return 0;
-		}
+	const checkIfSingleLineImportStatement = (lineText) => {
+		const singleLineImportRegexp = /import.*['"][^'"]+['"]/gm;
+		return lineText?.match(singleLineImportRegexp);
+	}
 
-		if (a?.length < b?.length) {
-			return -1;
-		}
+	const checkIfLineContainsLibrary = (lineText) => {
+		const libraryRegexp = /from\s*('[^']*'|"[^"]*")\s*/gm;
+		return lineText?.match(libraryRegexp)
+	}
+
+	const checkIfComponentImport = (lineText) => {
+		const dotRegexp = /\./gm;
+		return lineText?.match(dotRegexp);
 	}
 
 	const sortFunc = () => {
 		let editor = vscode.window.activeTextEditor
 
 		let numOfLines = editor?.document?.lineCount ?? 0;
-
-		const importRegexp = /import/gm;
-		const multipleImportRegexp = /{/gm;
-		const dotRegexp = /\./gm;
 
 		let libraryImports = [];
 		let componentImports = [];
@@ -102,34 +124,58 @@ function activate(context) {
 		/**
 		 * get library & components imports array
 		 */
+		let lineAtPos = 0;
+		let lineText = "";
+
 		for (let i = 0; i < numOfLines; i++) {
-			let lineAtPos = editor?.document?.lineAt(i);
+			lineAtPos = editor?.document?.lineAt(i);
 
-			let lineText = lineAtPos?.b ?? "";
+			lineText = lineAtPos?.b ?? "";
 
-			let importMatch = lineText?.match(importRegexp);
+			let importMatch = checkIfImportStatement(lineText);
 
-			if (importMatch) {
-				maxImportLineNum = Math.max(maxImportLineNum, lineAtPos?.a);
+			if (!importMatch) {
+				continue;
+			}
 
-				let dotMatch = lineText?.match(dotRegexp);
+			maxImportLineNum = Math.max(maxImportLineNum, lineAtPos?.a);
 
-				if (dotMatch) {
-					let multiImportMatch = lineText?.match(multipleImportRegexp)
+			let singleLineMatch = checkIfSingleLineImportStatement(lineText);
 
-					if (multiImportMatch) {
-						componentsMultiImport?.push(lineText)
-					} else {
-						componentImports?.push(lineText);
+			let multiLineStr = '';
+
+			if (!singleLineMatch) {
+				let libraryMatch = false;
+
+				while (!libraryMatch) {
+					multiLineStr += `${lineText?.trim()}`;
+					i += 1;
+					lineAtPos = editor?.document?.lineAt(i);
+					lineText = lineAtPos?.b ?? "";
+
+					maxImportLineNum = Math.max(maxImportLineNum, lineAtPos?.a);
+
+					libraryMatch = checkIfLineContainsLibrary(lineText);
+
+					if (libraryMatch) {
+						multiLineStr += `${lineText?.trim()}`;
+
+						const componentImportMatch = checkIfComponentImport(lineText);
+
+						if (componentImportMatch) {
+							componentsMultiImport?.push(multiLineStr);
+						} else {
+							libraryMultiImports?.push(multiLineStr);
+						}
 					}
+				}
+			} else {
+				const componentImportMatch = checkIfComponentImport(lineText);
+
+				if (componentImportMatch) {
+					componentImports?.push(lineText);
 				} else {
-					let multiImportMatch = lineText?.match(multipleImportRegexp)
-
-					if (multiImportMatch) {
-						libraryMultiImports?.push(lineText)
-					} else {
-						libraryImports?.push(lineText);
-					}
+					libraryImports?.push(lineText);
 				}
 			}
 		}
