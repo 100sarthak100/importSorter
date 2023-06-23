@@ -4,7 +4,7 @@
   "description": "Sort Imports",
   "publisher": "SarthakNaithani",
   "icon": "images/logo.png",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "engines": {
     "vscode": "^1.79.0"
   },
