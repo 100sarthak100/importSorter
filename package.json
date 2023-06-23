@@ -3,6 +3,7 @@
   "displayName": "Sorted",
   "description": "Sort Imports",
   "publisher": "SarthakNaithani",
+  "icon": "images/logo.png",
   "version": "0.4.0",
   "engines": {
     "vscode": "^1.79.0"
