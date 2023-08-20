@@ -2,6 +2,8 @@
 
 Sorted is a powerful VS Code extension that helps you organize and sort your import statements with ease. Say goodbye to manually arranging imports and let Sorted handle it for you.
 
+<img src="images/Sorted.png" alt="VSCode Extension" style="width: 100%;" />
+
 ## Features
 
 - `Smart Import Sorting`: Sorted intelligently sorts your imports based on the length of the import statement, grouping imports by their length.
@@ -10,7 +12,6 @@ Sorted is a powerful VS Code extension that helps you organize and sort your imp
 
 - `Multi-line Import Support`: Sorted handles multi-line imports effortlessly, ensuring clean and organized import blocks in your code.
 
-<img src="images/Sorted.png" alt="VSCode Extension" style="width: 100%;" />
 
 [Extension Link](https://marketplace.visualstudio.com/items?itemName=SarthakNaithani.Sorted&ssr=false#review-details)
 
