@@ -19,6 +19,13 @@
         "command": "importsorter.importsorter",
         "title": "Sort Imports"
       }
+    ],
+    "keybindings": [
+      {
+          "command": "importsorter.importsorter",
+          "key": "ctrl+k",
+          "mac": "cmd+k"
+      }
     ]
   },
   "repository": {
