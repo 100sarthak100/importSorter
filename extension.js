@@ -12,6 +12,11 @@ function activate(context) {
     return text.split("\n")?.length;
   }
 
+  function isLastLineNotEmpty(text) {
+    // Use a regular expression to test if the last line is not empty
+    return /\S/.test(text?.trim()?.split('\n')?.slice(-1)?.[0]);
+  }
+
   function hasEmptyLastLine(text) {
     // Use a regular expression to match the last line and check if it's empty
     return /\n$/?.test(text);
@@ -136,9 +141,7 @@ function activate(context) {
   };
 
   const getCompNameFromLine = (lineText) => {
-    const match = lineText?.match(
-      /import\s+(\w+)\s+from\s+['"]\.\/*([^'"]+)['"]/
-    );
+    const match = lineText?.match(/import\s+(\w+)\s+from\s+['"]\.\.?\/*([^'"]+)['"]/);
 
     if (match) {
       const libraryName = match?.[1] ?? "";
@@ -417,7 +420,9 @@ function activate(context) {
       });
     }
 
-    sortedText += `\n`
+    if(isLastLineNotEmpty(sortedText)) {
+      sortedText += `\n` 
+    }
 
     if (libraryMultiImportsString) {
       sortedText += `${libraryMultiImportsString}`;
