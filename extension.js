@@ -328,9 +328,7 @@ function activate(context) {
       sortedText += `${text}\n`;
     });
 
-    if(hasEmptyLastLine(sortedText)) {
-      sortedText += `\n`
-    }
+    sortedText += `\n`
 
     if (sortedComponentsArray?.length) {
       sortedComponentsArray?.map((text) => {
@@ -338,23 +336,17 @@ function activate(context) {
       });
     }
 
-    if(hasEmptyLastLine(sortedText)) {
-      sortedText += `\n`
-    }
+    sortedText += `\n`
 
     if (libraryMultiImportsString) {
       sortedText += `${libraryMultiImportsString}`;
     }
 
-    if(hasEmptyLastLine(sortedText)) {
-      sortedText += `\n`
-    }
+    sortedText += `\n`
 
     if (componentMultiImortsString) {
       sortedText += `${componentMultiImortsString}`;
     }
-
-    sortedText = removeExcessEmptyLines(sortedText)
 
     let deleteRange = new vscode.Range(
       new vscode.Position(0, 0),
