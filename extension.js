@@ -9,7 +9,7 @@ function activate(context) {
   }
 
   function countLines(text) {
-    return text.split('\n')?.length;
+    return text.split("\n")?.length;
   }
 
   function hasEmptyLastLine(text) {
@@ -135,6 +135,19 @@ function activate(context) {
     }
   };
 
+  const getCompNameFromLine = (lineText) => {
+    const match = lineText?.match(
+      /import\s+(\w+)\s+from\s+['"]\.\/*([^'"]+)['"]/
+    );
+
+    if (match) {
+      const libraryName = match?.[1] ?? "";
+      return libraryName;
+    } else {
+      return "";
+    }
+  };
+
   function checkLibrariesInLine(line, libraryList) {
     if (!line?.length || Object?.keys(libraryList)?.length === 0) {
       return;
@@ -173,6 +186,49 @@ function activate(context) {
     }
 
     return newObj;
+  }
+
+  function checkCompInLine(line, compList) {
+    if (!line?.length || Object?.keys(compList)?.length === 0) {
+      return;
+    }
+
+    let newCompObj = {};
+
+    for (const obj in compList) {
+      let compName = obj;
+      let used = compList?.[obj] ?? false;
+
+      if (used) {
+        continue;
+      }
+
+      let case1 = `${compName}.`;
+
+      let case2 = `${compName}?.`;
+
+      let case3 = `${compName}(`;
+
+      let case4 = `${compName}?.(`;
+
+      let case5 = `<${compName}`;
+
+      let isUsed =
+        line?.includes(case1) ||
+        line?.includes(case2) ||
+        line?.includes(case3) ||
+        line?.includes(case4) ||
+        line?.includes(case5);
+
+      if (isUsed) {
+        newCompObj = {
+          ...newCompObj,
+          [compName]: true,
+        };
+      }
+    }
+
+    return newCompObj;
   }
 
   const removeUnusedLibraryImports = (importList, libList) => {
@@ -223,6 +279,7 @@ function activate(context) {
      * to remove un-used imports
      */
     let libList = {};
+    let compList = {};
 
     let maxImportLineNum = 0;
 
@@ -246,6 +303,15 @@ function activate(context) {
           libList = {
             ...libList,
             ...obj,
+          };
+        }
+
+        if (lineText?.length && Object?.keys(compList)?.length) {
+          let obj = checkCompInLine(lineText, compList);
+
+          compList = {
+            ...compList,
+            ...obj
           };
         }
 
@@ -288,8 +354,18 @@ function activate(context) {
 
         if (componentImportMatch) {
           componentImports?.push(lineText);
+
+          const importCompName = getCompNameFromLine(lineText);
+
+          if (importCompName) {
+            compList = {
+              ...compList,
+              [importCompName]: false,
+            };
+          }
         } else {
           libraryImports?.push(lineText);
+
           const importLibName = getImportNameFromLine(lineText);
 
           if (importLibName) {
@@ -323,15 +399,20 @@ function activate(context) {
       libList
     );
 
+    let modifiedSortedCompyArray = removeUnusedLibraryImports(
+      sortedComponentsArray,
+      compList
+    );
+
     let sortedText = ``;
     modifiedSortedLibraryArray?.map((text) => {
       sortedText += `${text}\n`;
     });
 
-    sortedText += `\n`
+    sortedText += `\n`;
 
-    if (sortedComponentsArray?.length) {
-      sortedComponentsArray?.map((text) => {
+    if (modifiedSortedCompyArray?.length) {
+      modifiedSortedCompyArray?.map((text) => {
         sortedText += `${text}\n`;
       });
     }
@@ -342,11 +423,13 @@ function activate(context) {
       sortedText += `${libraryMultiImportsString}`;
     }
 
-    sortedText += `\n`
+    sortedText += `\n`;
 
     if (componentMultiImortsString) {
       sortedText += `${componentMultiImortsString}`;
     }
+
+    sortedText = removeExcessEmptyLines(sortedText);
 
     let deleteRange = new vscode.Range(
       new vscode.Position(0, 0),
