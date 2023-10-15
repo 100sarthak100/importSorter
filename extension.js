@@ -319,6 +319,10 @@ function activate(context) {
       sortedText += `${text}\n`;
     });
 
+    if(sortedText?.length) {
+      sortedText += `\n`
+    }
+
     if (sortedComponentsArray?.length) {
       sortedComponentsArray?.map((text) => {
         sortedText += `${text}\n`;
@@ -342,7 +346,7 @@ function activate(context) {
       editBuilder?.replace(deleteRange, sortedText);
     });
 
-    vscode.window.showInformationMessage("Your imports are sorted but life isn't.");
+    vscode.window.showInformationMessage("imports sorted");
   };
 
   let disposable = vscode.commands.registerCommand(
