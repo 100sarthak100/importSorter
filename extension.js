@@ -446,9 +446,7 @@ function activate(context) {
       sortedText += `${componentMultiImortsString}`;
     }
 
-    if(componentMultiImortsString) {
-      sortedText = removeExcessEmptyLines(sortedText);
-    }
+    sortedText = removeExcessEmptyLines(sortedText);
 
     let deleteRange = new vscode.Range(
       new vscode.Position(0, 0),
