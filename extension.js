@@ -8,6 +8,15 @@ function activate(context) {
     return text?.replace(regex, "\n") ?? "";
   }
 
+  function countLines(text) {
+    return text.split('\n')?.length;
+  }
+
+  function hasEmptyLastLine(text) {
+    // Use a regular expression to match the last line and check if it's empty
+    return /\n$/?.test(text);
+  }
+
   const importsSortFunc = (a, b) => {
     if (a?.length > b?.length) {
       return 1;
@@ -319,7 +328,7 @@ function activate(context) {
       sortedText += `${text}\n`;
     });
 
-    if(sortedText?.length) {
+    if(hasEmptyLastLine(sortedText)) {
       sortedText += `\n`
     }
 
@@ -329,13 +338,23 @@ function activate(context) {
       });
     }
 
+    if(hasEmptyLastLine(sortedText)) {
+      sortedText += `\n`
+    }
+
     if (libraryMultiImportsString) {
-      sortedText += `\n${libraryMultiImportsString}`;
+      sortedText += `${libraryMultiImportsString}`;
+    }
+
+    if(hasEmptyLastLine(sortedText)) {
+      sortedText += `\n`
     }
 
     if (componentMultiImortsString) {
       sortedText += `${componentMultiImortsString}`;
     }
+
+    sortedText = removeExcessEmptyLines(sortedText)
 
     let deleteRange = new vscode.Range(
       new vscode.Position(0, 0),
