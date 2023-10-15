@@ -12,14 +12,20 @@ function activate(context) {
     return text.split("\n")?.length;
   }
 
-  function isLastLineNotEmpty(text) {
-    // Use a regular expression to test if the last line is not empty
-    return /\S/.test(text?.trim()?.split('\n')?.slice(-1)?.[0]);
-  }
-
-  function hasEmptyLastLine(text) {
-    // Use a regular expression to match the last line and check if it's empty
-    return /\n$/?.test(text);
+  function ensureTwoNewlinesAtEnd(text) {
+    const currentNewlines = (text.match(/\n+$/) || [''])[0].length;
+    const difference = currentNewlines - 2;
+  
+    if (difference < 0) {
+      // Add newline characters to reach exactly 2
+      return text + '\n'.repeat(-difference);
+    } else if (difference > 0) {
+      // Remove extra newline characters to reach exactly 2
+      return text.slice(0, -difference);
+    } else {
+      // The string already has 2 newline characters at the end
+      return text;
+    }
   }
 
   const importsSortFunc = (a, b) => {
@@ -412,7 +418,10 @@ function activate(context) {
       sortedText += `${text}\n`;
     });
 
-    sortedText += `\n`;
+    if(sortedText?.length) {
+      sortedText += `\n`;
+      sortedText = ensureTwoNewlinesAtEnd(sortedText)
+    }
 
     if (modifiedSortedCompyArray?.length) {
       modifiedSortedCompyArray?.map((text) => {
@@ -420,21 +429,26 @@ function activate(context) {
       });
     }
 
-    if(isLastLineNotEmpty(sortedText)) {
-      sortedText += `\n` 
+    if (modifiedSortedCompyArray?.length) {
+      sortedText += `\n`;
+      sortedText = ensureTwoNewlinesAtEnd(sortedText)
     }
 
     if (libraryMultiImportsString) {
       sortedText += `${libraryMultiImportsString}`;
     }
 
-    sortedText += `\n`;
+    if(libraryMultiImportsString) {
+      sortedText = ensureTwoNewlinesAtEnd(sortedText)
+    }
 
     if (componentMultiImortsString) {
       sortedText += `${componentMultiImortsString}`;
     }
 
-    sortedText = removeExcessEmptyLines(sortedText);
+    if(componentMultiImortsString) {
+      sortedText = removeExcessEmptyLines(sortedText);
+    }
 
     let deleteRange = new vscode.Range(
       new vscode.Position(0, 0),
