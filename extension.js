@@ -141,7 +141,7 @@ function activate(context) {
   };
 
   const getCompNameFromLine = (lineText) => {
-    const match = lineText?.match(/import\s+(\w+)\s+from\s+['"]\.\.?\/*([^'"]+)['"]/);
+    const match = lineText?.match(/import\s+(\w+|\{[^}]*\})\s+from\s+['"]\.\.?\/*([^'"]+)['"]/);
 
     if (match) {
       const libraryName = match?.[1] ?? "";
