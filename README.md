@@ -12,7 +12,7 @@ Sorted is a powerful VS Code extension that helps you organize and sort your imp
 
 - `Multi-line Import Support`: Sorted handles multi-line imports effortlessly, ensuring clean and organized import blocks in your code.
 
-- `Remove unused imports`: This feature enhances code cleanliness by automatically removing single-line library imports that are no longer utilized within the codebase.
+- `Remove unused imports`: This feature enhances code cleanliness by automatically removing single-line imports that are no longer utilized within the codebase.
 
 
 [Extension Link](https://marketplace.visualstudio.com/items?itemName=SarthakNaithani.Sorted&ssr=false#review-details)
