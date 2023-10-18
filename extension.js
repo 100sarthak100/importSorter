@@ -180,11 +180,14 @@ function activate(context) {
 
       let case4 = `${libName}?.(`;
 
+      let case5 = `${libName}`;
+
       let isUsed =
         line?.includes(case1) ||
         line?.includes(case2) ||
         line?.includes(case3) ||
-        line?.includes(case4);
+        line?.includes(case4) ||
+        line?.includes(case5)
 
       if (isUsed) {
         newObj = {
@@ -222,12 +225,15 @@ function activate(context) {
 
       let case5 = `<${compName}`;
 
+      let case6 = `${libName}`;
+
       let isUsed =
         line?.includes(case1) ||
         line?.includes(case2) ||
         line?.includes(case3) ||
         line?.includes(case4) ||
-        line?.includes(case5);
+        line?.includes(case5) ||
+        line?.includes(case6)
 
       if (isUsed) {
         newCompObj = {
