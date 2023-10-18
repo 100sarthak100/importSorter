@@ -225,7 +225,7 @@ function activate(context) {
 
       let case5 = `<${compName}`;
 
-      let case6 = `${libName}`;
+      let case6 = `${compName}`;
 
       let isUsed =
         line?.includes(case1) ||
