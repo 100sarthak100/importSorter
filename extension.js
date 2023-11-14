@@ -409,15 +409,21 @@ function activate(context) {
     let sortedComponentsArray = componentImports?.sort(importsSortFunc);
     let sortedLibraryArray = libraryImports?.sort(importsSortFunc);
 
-    let modifiedSortedLibraryArray = removeUnusedLibraryImports(
-      sortedLibraryArray,
-      libList
-    );
+    /** Removed this feature for now */
+    // let modifiedSortedLibraryArray = removeUnusedLibraryImports(
+    //   sortedLibraryArray,
+    //   libList
+    // );
 
-    let modifiedSortedCompyArray = removeUnusedLibraryImports(
-      sortedComponentsArray,
-      compList
-    );
+    let modifiedSortedLibraryArray = sortedLibraryArray;
+
+    /** Removed this feature for now */
+    // let modifiedSortedCompyArray = removeUnusedLibraryImports(
+    //   sortedComponentsArray,
+    //   compList
+    // );
+
+    let modifiedSortedCompyArray = sortedComponentsArray;
 
     let sortedText = ``;
     modifiedSortedLibraryArray?.map((text) => {
